@@ -46,10 +46,10 @@ public class Generator {
 	}
 */
 	
-	private String root = "C4";
+	private String root = "C";
 	private int tempo = 120;
-	private String leadInst = "PIANO";
-	private String chordsInst = "PIANO";
+	private String leadInst = "CRYSTAL";
+	private String chordsInst = "STRING_ENSEMBLE_2";
 	
 	private Player player;
 	private Pattern song;
@@ -87,7 +87,7 @@ public class Generator {
 			IntervalNotation riff = new IntervalNotation(c);
 			chords.add(riff.getPatternForRootNote(root));
 			IntervalNotation riff2 = new IntervalNotation(a);
-			lead.add(riff2.getPatternForRootNote(root));
+			lead.add(riff2.getPatternForRootNote(root + "6"));
 		}
 		// add instrument and channel info to each track
 		lead.insert("v4 " + "I[" + leadInst + "]");
@@ -208,7 +208,6 @@ public class Generator {
 		progression += buildChord(secondToLast[tmp], 'w');
 		// last chord will be the tonic
 		progression += "<0>majw";
-		System.out.println(progression);
 		return progression;
 	}	
 

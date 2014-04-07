@@ -74,12 +74,14 @@ public class ControlPanel
 	{
 		Box options = Box.createVerticalBox();
 		String[] keys = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
-		String[] instruments = {"ALTO_SAX", "CELLO", "CHURCH_ORGAN", "CRYSTAL", "GUITAR", "HALO", "OVERDRIVEN_GUITAR", "PIANO", "POLYSYNTH", "SHAMISEN", 
-				"SITAR", "STRING_ENSEMBLE_1", "STRING_ENSEMBLE_2", "VIOLIN", "WHISTLE"};
+		String[] instruments = {"ALTO_SAX", "BRASS_SECTION", "BRIGHTNESS", "CELESTA", "CELLO", "CHURCH_ORGAN", "CRYSTAL", "GUITAR", "HALO", "MUSIC_BOX", "NEW_AGE", "OVERDRIVEN_GUITAR",
+				"PIANO", "POLYSYNTH", "SHAMISEN", "SITAR", "STRING_ENSEMBLE_1", "STRING_ENSEMBLE_2", "TRUMPET", "TUBULAR_BELLS", "VIOLIN", "WHISTLE", "XYLOPHONE"};
 		
 		JComboBox<String> key = new JComboBox<String>(keys);
 		JComboBox<String> lead = new JComboBox<String>(instruments);
+		lead.setSelectedIndex(6);
 		JComboBox<String> rhythm = new JComboBox<String>(instruments);
+		rhythm.setSelectedIndex(17);
 		
 		key.addActionListener(new ActionListener() {
 			@Override
@@ -180,7 +182,7 @@ public class ControlPanel
 	{
 		Box controls = Box.createVerticalBox();
 		
-		BufferedImage logo = ImageIO.read(new File("gui.png"));
+		BufferedImage logo = ImageIO.read(this.getClass().getResource("gui.png"));
 		JLabel background = new JLabel(new ImageIcon(logo));
 		background.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
