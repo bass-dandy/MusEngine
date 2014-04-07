@@ -1,13 +1,19 @@
 
-import java.io.IOException;
+import javax.swing.SwingUtilities;
 
 
 public class Main
 {
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args)
 	{
-		Generator g = new Generator();
-		ControlPanel cp = new ControlPanel(g);
-		cp.show();
+		final Generator g = new Generator();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				ControlPanel cp = new ControlPanel(g);
+				cp.show();	
+			}
+		});
 	}
 }

@@ -33,39 +33,42 @@ public class Generator {
 	private static final int[] locrian = {0, 1, 3, 5, 6, 8, 10, 12};
 	private static final int[] lydian = {0, 2, 4, 6, 7, 9, 11, 12};;
 
-	/*
-	public static void main(String args[]) {
-		Player player = new Player();
-		Random r = new Random();
-		int tempo = r.nextInt(120) + 60; // tempo between 40 and 160 bpm
-		String t = "T" + tempo;
-		String root = roots[r.nextInt(12)];
-
-		Pattern song = writeSong(root, t);
-		player.play(song);
-	}
-*/
-	
 	private String root = "C";
 	private int tempo = 120;
 	private String leadInst = "CRYSTAL";
 	private String chordsInst = "STRING_ENSEMBLE_2";
-	
+
 	private Player player;
 	private Pattern song;
-	
+
 	public Generator()
 	{
 		player = new Player();
 	}
-	
+
 	public void play()
 	{
-		String t = "T" + tempo;
-		song = writeSong(root, t);
-		player.play(song);
+		if(player.isPaused())
+			player.resume();
+		else if(!player.isStarted())
+		{
+			String t = "T" + tempo;
+			song = writeSong(root, t);
+			player.play(song);
+		}
 	}
-	
+
+	public void pause()
+	{
+		if(player.isPlaying())
+			player.pause();
+	}
+
+	public void stop()
+	{
+		player.stop();
+	}
+
 	/**
 	 * Writes a song in a specified key at a specified tempo and returns it as a Pattern
 	 * 
@@ -164,9 +167,9 @@ public class Generator {
 		}
 		return melody;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Writes a melody that links two chords together
 	 * 
@@ -177,7 +180,7 @@ public class Generator {
 	public String walkToChord(int source, int dest) {
 		String melody = "<";
 		int distance = dest - source;
-		
+
 		return melody;
 	}
 
@@ -239,7 +242,7 @@ public class Generator {
 	public void setTempo(int tempo) {
 		this.tempo = tempo;
 	}
-	
+
 	public void setLeadInst(String leadInst) {
 		this.leadInst = leadInst;
 	}

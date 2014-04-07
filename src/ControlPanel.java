@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -29,9 +30,10 @@ public class ControlPanel
 {
 	private static final Color color = new Color(116, 131, 145);
 	private Generator g;
+	private MusicPlayer p;
 	private JFrame frame;
 	
-	public ControlPanel(Generator g) throws IOException
+	public ControlPanel(Generator g)
 	{
 		this.g = g;
 		buildGUI();
@@ -42,7 +44,7 @@ public class ControlPanel
 		frame.setVisible(true);
 	}
 	
-	private void buildGUI() throws IOException
+	private void buildGUI()
 	{
 		try {
 		    UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
@@ -60,7 +62,7 @@ public class ControlPanel
 		content.setLayout(new GridLayout(1, 3));
 		content.setBorder(new EmptyBorder(10, 10, 10, 10));
 		
-		JLabel instructions = new JLabel("<html><center>Instructions:<br><br>Adjust generation settings in the left pane,<br>then just hit play to generate a song!</center></html>");
+		JLabel instructions = new JLabel("<html><center><b>Instructions:</b><br><br>Adjust generation settings in the left pane,<br>then just hit play to generate a song!</center></html>");
 		instructions.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		content.add(optionsPane());
@@ -178,30 +180,60 @@ public class ControlPanel
 		return options;
 	}
 	
-	private Box controlsPane() throws IOException
+	private Box controlsPane() 
 	{
 		Box controls = Box.createVerticalBox();
 		
-		BufferedImage logo = ImageIO.read(this.getClass().getResource("gui.png"));
+		BufferedImage logo = null;
+		try {
+			logo = ImageIO.read(this.getClass().getResource("gui.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		JLabel background = new JLabel(new ImageIcon(logo));
 		background.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		Box playback = Box.createHorizontalBox();
+		
 		JButton play = new JButton(">");
 		play.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				g.play();
+				p = new MusicPlayer();
+				try {
+					p.execute();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
+		
 		JButton stop = new JButton("[]");
+		stop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				g.stop();
+			}
+		});
+		
 		JButton pause = new JButton("| |");
+		pause.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				g.pause();
+			}
+		});
+		
 		playback.add(play);
 		playback.add(stop);
 		playback.add(pause);
 		
+		Box file = Box.createHorizontalBox();
 		JButton save = new JButton("Save");
-		save.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JButton load = new JButton("Load");
+		file.add(save);
+		file.add(load);
 		
 		controls.add(background);
 		
@@ -211,8 +243,17 @@ public class ControlPanel
 		controls.add(playback);
 		
 		controls.add(Box.createVerticalStrut(2));
-		controls.add(save);
+		controls.add(file);
 		
 		return controls;
+	}
+	
+	private class MusicPlayer extends SwingWorker<Void, Void>
+	{
+		@Override
+		protected Void doInBackground() throws Exception {
+			g.play();
+			return null;
+		}
 	}
 }
