@@ -1,6 +1,12 @@
-MusicGen
-========
+                                                                                   
+    _/      _/                      _/                  _/_/_/                     
+   _/_/  _/_/  _/    _/    _/_/_/        _/_/_/      _/          _/_/    _/_/_/    
+  _/  _/  _/  _/    _/  _/_/      _/  _/            _/  _/_/  _/_/_/_/  _/    _/   
+ _/      _/  _/    _/      _/_/  _/  _/            _/    _/  _/        _/    _/    
+_/      _/    _/_/_/  _/_/_/    _/    _/_/_/        _/_/_/    _/_/_/  _/    _/     
+                                                                                                                                                                  
 
-Procedural music generator written in Java (WIP)
+Author: Christian Dinh
 
+Procedural music generator written in Java.
 Uses the JFugue API (by David Koelle) to create (hopefully) pleasant songs through application of music theory.

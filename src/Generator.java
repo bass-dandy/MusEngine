@@ -1,7 +1,7 @@
 import org.jfugue.*;
 import java.util.Random;
 
-public class Test {
+public class Generator {
 
 	private static final String[] roots = {"A4", "A#4", "B4", "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4"};
 	private static final String[] voicings = {"maj", "min", "min", "maj", "maj", "min", "dim"};
@@ -33,7 +33,7 @@ public class Test {
 	private static final int[] locrian = {0, 1, 3, 5, 6, 8, 10, 12};
 	private static final int[] lydian = {0, 2, 4, 6, 7, 9, 11, 12};;
 
-
+	/*
 	public static void main(String args[]) {
 		Player player = new Player();
 		Random r = new Random();
@@ -44,8 +44,28 @@ public class Test {
 		Pattern song = writeSong(root, t);
 		player.play(song);
 	}
-
-
+*/
+	
+	private String root = "C4";
+	private int tempo = 120;
+	private String leadInst = "PIANO";
+	private String chordsInst = "PIANO";
+	
+	private Player player;
+	private Pattern song;
+	
+	public Generator()
+	{
+		player = new Player();
+	}
+	
+	public void play()
+	{
+		String t = "T" + tempo;
+		song = writeSong(root, t);
+		player.play(song);
+	}
+	
 	/**
 	 * Writes a song in a specified key at a specified tempo and returns it as a Pattern
 	 * 
@@ -53,7 +73,7 @@ public class Test {
 	 * @param tempo The tempo at which the song will be played
 	 * @return Pattern song: The finished product as a JFugue Pattern
 	 */
-	private static Pattern writeSong(String root, String tempo) {
+	private Pattern writeSong(String root, String tempo) {
 		Pattern chords = new Pattern();
 		Pattern lead = new Pattern();
 		Pattern song = new Pattern();
@@ -70,8 +90,8 @@ public class Test {
 			lead.add(riff2.getPatternForRootNote(root));
 		}
 		// add instrument and channel info to each track
-		lead.insert("v4 I[0]");
-		chords.insert("v5 I[0]");
+		lead.insert("v4 " + "I[" + leadInst + "]");
+		chords.insert("v5 " + "I[" + chordsInst + "]");
 
 		// combine tracks in song, set tempo
 		song.add(lead);
@@ -87,7 +107,7 @@ public class Test {
 	 * @param chords JFugue Pattern string representing a chord progression to be soloed over
 	 * @return String melody: JFugue Pattern string representing the completed melody
 	 */
-	public static String writeLead(String chords) {
+	public String writeLead(String chords) {
 		String[] chordsArr = chords.split(" ");
 		String melody = "";
 		int prev = 0;
@@ -154,7 +174,7 @@ public class Test {
 	 * @param dest The chord being walked to
 	 * @return melody: JFugue Pattern String representing the completed melody
 	 */
-	public static String walkToChord(int source, int dest) {
+	public String walkToChord(int source, int dest) {
 		String melody = "<";
 		int distance = dest - source;
 		
@@ -168,7 +188,7 @@ public class Test {
 	 * @param root The key the song is written in
 	 * @return String progression: a JFugue pattern string representing the finished chord progression
 	 */
-	public static String writeChords(String root) {
+	public String writeChords(String root) {
 		String progression = "<0>majw "; // first chord is always the tonic
 		Random r = new Random();
 		int tmp = 0;
@@ -200,7 +220,7 @@ public class Test {
 	 * @param dur How many beats the chord will be sustained
 	 * @return String chord: JFugue Pattern string representing the completed chord
 	 */
-	private static String buildChord(int interval, char dur) {
+	private String buildChord(int interval, char dur) {
 		Random r = new Random();
 		// if it's a 5th, roll die to replace with sus4
 		if(interval == 4) {
@@ -211,5 +231,21 @@ public class Test {
 		}
 		String chord = "<" + intervals[interval] + ">" + voicings[interval] + dur + " ";
 		return chord;
+	}
+
+	public void setRoot(String root) {
+		this.root = root;
+	}
+
+	public void setTempo(int tempo) {
+		this.tempo = tempo;
+	}
+	
+	public void setLeadInst(String leadInst) {
+		this.leadInst = leadInst;
+	}
+
+	public void setChordsInst(String chordsInst) {
+		this.chordsInst = chordsInst;
 	}
 }
