@@ -4,7 +4,8 @@ import java.util.Random;
 public class Generator {
 
 	private static final String[] roots = {"A4", "A#4", "B4", "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4"};
-	private static final String[] voicings = {"maj", "min", "min", "maj", "maj", "min", "dim"};
+	private static final String[] voicingsMaj = {"maj", "min", "min", "maj", "maj", "min", "dim"};
+	private static final String[] voicingsMin = {"min", "dim", "maj", "min", "min", "maj", "maj"};
 
 	private static final int[] intervals = {0, 2, 4, 5, 7, 9, 11, 12};
 
@@ -37,6 +38,7 @@ public class Generator {
 	private int tempo = 120;
 	private String leadInst = "CRYSTAL";
 	private String chordsInst = "STRING_ENSEMBLE_2";
+	private boolean major = true;
 
 	private Player player;
 	private Pattern song;
@@ -123,7 +125,7 @@ public class Generator {
 			interval = Integer.parseInt(Character.toString(chordsArr[i].charAt(1)));
 
 			// make major arp
-			if(interval == 0 || interval == 5 || interval == 7) {
+			if( (major && (interval == 0 || interval == 5 || interval == 7)) || (!major && (interval == 3 || interval == 8 || interval == 10)) ) {
 				for(int j = 0; j < 4; j++) {
 					current = r.nextInt(4);
 					if(current == prev && j != 0) {
@@ -139,7 +141,7 @@ public class Generator {
 				}
 			}
 			// make dimished arp
-			else if(interval == 11) {
+			else if( (major && interval == 11) || (!major && interval == 2) ) {
 				for(int j = 0; j < 4; j++) {
 					current = r.nextInt(4);
 					if(current == prev && j != 0) {
@@ -192,7 +194,14 @@ public class Generator {
 	 * @return String progression: a JFugue pattern string representing the finished chord progression
 	 */
 	public String writeChords(String root) {
-		String progression = "<0>majw "; // first chord is always the tonic
+		String progression;
+		
+		// first chord is always the tonic
+		if(major)
+			progression = "<0>majw ";
+		else
+			progression = "<0>minw ";
+			
 		Random r = new Random();
 		int tmp = 0;
 		int prev = 0;
@@ -210,7 +219,11 @@ public class Generator {
 		tmp = r.nextInt(3);
 		progression += buildChord(secondToLast[tmp], 'w');
 		// last chord will be the tonic
-		progression += "<0>majw";
+		if(major)
+			progression += "<0>majw ";
+		else
+			progression += "<0>minw ";
+		
 		return progression;
 	}	
 
@@ -225,16 +238,27 @@ public class Generator {
 	private String buildChord(int interval, char dur) {
 		Random r = new Random();
 		// if it's a 5th, roll die to replace with sus4
-		if(interval == 4) {
+		if(interval == 4 && major) {
 			int sub = r.nextInt(2);
 			if(sub == 1) {
 				return "<" + intervals[interval] + ">sus4" + dur + " "; 
 			}
 		}
-		String chord = "<" + intervals[interval] + ">" + voicings[interval] + dur + " ";
+		String chord = "<" + intervals[interval] + ">";
+		
+		if(major)
+			chord += voicingsMaj[interval];
+		else
+			chord += voicingsMin[interval];
+		
+		chord += dur + " ";
 		return chord;
 	}
 
+	public void setMajor(boolean major) {
+		this.major = major;
+	}
+	
 	public void setRoot(String root) {
 		this.root = root;
 	}

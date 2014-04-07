@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -127,14 +128,33 @@ public class ControlPanel
 		});
 		
 		Box mood = Box.createHorizontalBox();
+		ButtonGroup moodGroup = new ButtonGroup();
+		
 		JCheckBox major = new JCheckBox("Major", true);
 		major.setAlignmentX(Component.CENTER_ALIGNMENT);
 		major.setBackground(color);
 		mood.add(major);
+		moodGroup.add(major);
+		major.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				g.setMajor(true);
+			}
+		});
+		
+		mood.add(Box.createHorizontalStrut(10));
+		
 		JCheckBox minor  = new JCheckBox("Minor");
 		minor.setAlignmentX(Component.CENTER_ALIGNMENT);
 		minor.setBackground(color);
 		mood.add(minor);
+		moodGroup.add(minor);
+		minor.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				g.setMajor(false);
+			}
+		});
 		
 		major.addActionListener(new ActionListener() {
 			@Override
@@ -235,6 +255,8 @@ public class ControlPanel
 		file.add(save);
 		file.add(load);
 		
+		controls.add(Box.createVerticalGlue());
+		
 		controls.add(background);
 		
 		JLabel playbackLabel = new JLabel("Playback");
@@ -243,7 +265,9 @@ public class ControlPanel
 		controls.add(playback);
 		
 		controls.add(Box.createVerticalStrut(2));
-		controls.add(file);
+		//controls.add(file);
+		
+		controls.add(Box.createVerticalGlue());
 		
 		return controls;
 	}
